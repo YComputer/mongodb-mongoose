@@ -1,19 +1,33 @@
+var express = require('express');
+var app = express();
+var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/cs5610');
 
-var FormSchema = mongoose.Schema({
-    name: String,
-    created: {type: Date, default: Date.now}
-},{collection:'form'})
+//model
+var Genre = require('./model/genre');
 
-var Form = mongoose.model('Form', FormSchema);
+// connect to mongoose
+// 数据库可以不提前创建，只要这里指定了连接，在mongoose调用成功以后，会直接创建数据库和表。
+mongoose.connect('mongodb://localhost/bookstore');
+var db = mongoose.connection;
 
-Form.find({name:'name2'},(err,data)=>{
-    console.log(err);
-    console.log(data);
+app.get('/', function(req, res){
+    res.send('Hello world');
 });
 
-Form.findById('57fddac93b771f2a622b2bb0', (err, data)=>{
-    console.log(err);
-    console.log(data);
+app.get('/api/genres', function(req, res){
+    // var genre = new Genre({name:'name3'});
+    // genre.save(function(err, obj){
+    //     res.json(obj)
+    // })
+    Genre.getGenres(function(err, data){
+        if(err){
+            console.log(err);
+            throw err;
+        }
+        res.json(data);
+    })
 });
+
+app.listen(3000);
+console.log('running on port 3000');
