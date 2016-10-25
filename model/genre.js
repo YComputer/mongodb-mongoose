@@ -19,3 +19,7 @@ var Genre = module.exports = mongoose.model('Genre',genreSchema);
 module.exports.getGenres = function(cb, limit){
     Genre.find(cb).limit(limit);
 }
+
+module.exports.addGenres = function(genre, cb){
+    Genre.create(genre,cb);
+}
